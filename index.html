@@ -46,13 +46,14 @@
 <!-- クイズ画面 -->
 <div class="container" id="quiz-screen">
   <h1>答えを入力してください</h1>
+    <h2>※ひらがなで入力すること</h2>
   <input type="text" id="answer" placeholder="ここに入力" autocomplete="off" onkeydown="handleKey(event)" />
   <button onclick="checkAnswer()">送信</button>
 </div>
 
 <!-- 正解画面5 -->
 <div class="container" id="correct-screen-5">
- <h1>info 5</h1>
+ <h1>info 3</h1>
     <h1>〜日記・後日譚〜</h1>
   <p><h2>QRコードを読み取ってください</h2>
     <img src =toin136-4_diary.png></p>
@@ -102,7 +103,7 @@ function checkAnswer() {
   if (countdownInterval) clearInterval(countdownInterval);
 
   // 正解判定（英語）
-  if (["end"].includes(userAnswer)) {
+  if (["だいだんえん"].includes(userAnswer)) {
     document.getElementById("correct-screen-5").style.display = "block";
   } else {
     document.getElementById("incorrect-screen").style.display = "block";
