@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>桐陰祭136-4</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; height: 100%; width: 100%; font-family: sans-serif; }
+    body {
+      background-image: url('宇宙.png');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-color: #000;
+      color: #a8ff60;
+      display: flex; justify-content: center; align-items: center;
+      position: relative;
+    }
+    body::before {
+      content: "";
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.65); z-index: 0;
+    }
+    .container {
+      position: relative; z-index: 1;
+      max-width: 600px; width: 90%; padding: 40px 30px; border-radius: 12px; text-align: center;
+    }
+    h1 { font-size: 2.5rem; margin-bottom: 30px; text-shadow: 0 0 8px #a8ff60; }
+    p { font-size: 1.5rem; margin: 20px 0; text-shadow: 0 0 6px #a8ff60; }
+    input {
+      font-size: 1.2rem; padding: 12px; width: 80%; max-width: 400px; margin-top: 20px;
+      border: 2px solid #a8ff60; background-color: rgba(18, 26, 0, 0.7);
+      color: #a8ff60; border-radius: 6px; outline: none;
+    }
+    input:focus { border-color: #d4ff8c; background-color: rgba(33, 48, 0, 0.85); }
+    button {
+      font-size: 1.2rem; padding: 12px 24px; margin-top: 30px; cursor: pointer;
+      background-color: rgba(34, 68, 0, 0.8); border: 2px solid #a8ff60; color: #a8ff60; border-radius: 8px;
+    }
+    button:hover { background-color: #3eb800; color: #000; border-color: #3eb800; }
+    #incorrect-screen, #correct-screen-1, #correct-screen-2, #correct-screen-3, #correct-screen-4, #correct-screen-5 { display: none; }
+  </style>
+</head>
+<body>
+
+<!-- クイズ画面 -->
+<div class="container" id="quiz-screen">
+  <h1>答えを入力してください</h1>
+  <input type="text" id="answer" placeholder="ここに入力" autocomplete="off" onkeydown="handleKey(event)" />
+  <button onclick="checkAnswer()">送信</button>
+</div>
+
+<!-- 正解画面5 -->
+<div class="container" id="correct-screen-5">
+ <h1>info 5</h1>
+    <h1>〜日記・後日譚〜</h1>
+  <p><h2>QRコードを読み取ってください</h2>
+    <img src =toin136-4_diary.png></p>
+  <button onclick="location.reload()">戻る</button>
+  <p style="font-size:0.9rem; color:#a8ff60a0;">※スペースキーでも戻れます</p>
+</div>
+
+<!-- 不正解画面 -->
+<div class="container" id="incorrect-screen">
+  <h1>ERROR</h1>
+  <p>答えが異なります。<br>あと <span id="countdown">3</span> 秒で自動で戻ります。</p>
+</div>
+
+<script>
+let countdownInterval = null;
+
+function handleKey(event) {
+  if (event.key === "Enter") {
+    if (document.getElementById('incorrect-screen').style.display === 'block') {
+      event.preventDefault();
+      return;
+    }
+    checkAnswer();
+  }
+}
+
+// スペースキーで正解画面から再挑戦
+document.addEventListener('keydown', function(event) {
+  const correctScreen = document.getElementById('correct-screen-5');
+  if (correctScreen.style.display === 'block' && event.code === 'Space') {
+    event.preventDefault();
+    location.reload();
+  }
+
+  if (document.getElementById('incorrect-screen').style.display === 'block') {
+    if (event.code === 'Enter' || event.code === 'Space') {
+      event.preventDefault();
+    }
+  }
+});
+
+    
+function checkAnswer() {
+  const userAnswer = document.getElementById("answer").value.trim().toLowerCase();
+  document.getElementById("quiz-screen").style.display = "none";
+
+  if (countdownInterval) clearInterval(countdownInterval);
+
+  // 正解判定（英語）
+  if (["end"].includes(userAnswer)) {
+    document.getElementById("correct-screen-5").style.display = "block";
+  } else {
+    document.getElementById("incorrect-screen").style.display = "block";
+    startCountdown(3);
+  }
+}
+
+function goBack() {
+  if (countdownInterval) clearInterval(countdownInterval);
+  document.getElementById("incorrect-screen").style.display = "none";
+  document.getElementById("quiz-screen").style.display = "block";
+  const input = document.getElementById("answer");
+  input.value = "";
+  input.focus();
+}
+
+function startCountdown(seconds) {
+  const countdownElem = document.getElementById("countdown");
+  let remaining = seconds;
+  countdownElem.textContent = remaining;
+  countdownInterval = setInterval(() => {
+    remaining--;
+    countdownElem.textContent = remaining;
+    if (remaining <= 0) {
+      clearInterval(countdownInterval);
+      countdownInterval = null;
+      goBack();
+    }
+  }, 1000);
+}
+</script>
+
+</body>
+</html>
